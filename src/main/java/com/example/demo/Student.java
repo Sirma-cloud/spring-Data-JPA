@@ -4,7 +4,12 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
-@Table
+@Table(
+        name = "student",
+        uniqueConstraints =  {
+                @UniqueConstraint(name = "student_email_unique", columnNames = "email")
+        }
+)
 @Entity(name = "Student")
 public class Student {
 
@@ -18,10 +23,35 @@ public class Student {
             strategy = SEQUENCE,
             generator = "student_sequence"
     )
+    @Column(
+            name = "id",
+            updatable = false
+    )
     private  Long id;
+
+    @Column(
+            name = "first_Name",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private  String firstName;
+    @Column(
+            name = "last_Name",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private  String lastName;
+    @Column(
+            name = "email",
+            nullable = false,
+            columnDefinition = "TEXT"
+    )
     private  String email;
+
+    @Column(
+            name = "age",
+            nullable = false
+    )
     private  Integer age;
 
     public Student(Long id,
