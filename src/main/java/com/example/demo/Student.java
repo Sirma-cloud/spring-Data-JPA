@@ -73,8 +73,13 @@ public class Student {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-
     private List<Book> books = new ArrayList<>();
+
+    @OneToMany(
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            mappedBy = "student"
+    )
+    private List<Enrolment> enrolments = new ArrayList<>();
 
     public Student(String firstName,
                    String lastName,
@@ -129,6 +134,7 @@ public class Student {
     public void setAge(Integer age) {
         this.age = age;
     }
+
     public void addBook(Book book) {
         if (!this.books.contains(book)) {
             this.books.add(book);
@@ -142,12 +148,27 @@ public class Student {
             book.setStudent(null);
         }
     }
+
     public void setStudentIdCard(StudentIdCard studentIdCard) {
         this.studentIdCard = studentIdCard;
     }
 
     public List<Book> getBooks() {
         return books;
+    }
+
+    public List<Enrolment> getEnrolments() {
+        return enrolments;
+    }
+
+    public void addEnrolment(Enrolment enrolment) {
+        if (!enrolments.contains(enrolment)) {
+            enrolments.add(enrolment);
+        }
+    }
+
+    public void removeEnrolment(Enrolment enrolment) {
+        enrolments.remove(enrolment);
     }
 
     @Override
