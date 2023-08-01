@@ -1,11 +1,16 @@
 package com.example.demo;
 
+import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 @SpringBootApplication
 public class Application {
@@ -15,47 +20,115 @@ public class Application {
     }
 
     @Bean
-    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
-        return  args -> {
-            Student alex = new Student(
-                    "alex",
-                    "koech",
-                    "alexkoech@gmail.com",
-                    14
-            );
-            Student maria = new Student(
-                    "Joy",
-                    "Mwangi",
-                    "Joy.Mwangi@gmail.com",
-                    19
-            );
+    CommandLineRunner commandLineRunner(
+            StudentRepository studentRepository,
+            StudentIdCardRepository studentIdCardRepository) {
+        return args -> {
+            Faker faker = new Faker();
 
-            Student ahmed = new Student(
-                    "Julie",
-                    "Yego",
-                    "Julie.Yego@gmail.com",
-                    22
-            );
-            studentRepository.saveAll(List.of(alex, ahmed, maria));
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@gmail.com", firstName, lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17, 55));
 
-            studentRepository
-                    .findStudentByEmail("Joy.Mwangi@gmail.com")
-                    .ifPresentOrElse(
-                            System.out::println,
-                            () -> System.out.println("Student with email Joy.Mwangi@gmail.com not found"));
+            StudentIdCard studentIdCard = new StudentIdCard(
+                    "123456789",
+                    student);
 
-            studentRepository.selectStudentWhereFirstNameAndAgeGreaterOrEqual(
-                    "Maria",
-                    21
-            ).forEach(System.out::println);
+            studentIdCardRepository.save(studentIdCard);
 
-            studentRepository.selectStudentWhereFirstNameAndAgeGreaterOrEqualNative(
-                    "Julie",
-                    19
-            ).forEach(System.out::println);
+            studentRepository.findById(1L)
+                    .ifPresent(System.out::println);
 
-            System.out.println("Deleting Julie Yego");
-            System.out.println(studentRepository.deleteStudentById(3L));
+            studentIdCardRepository.findById(1L)
+                    .ifPresent(System.out::println);
+
+//            studentRepository.deleteById(1L);
+
         };
     }
+
+    private void generateRandomStudents(StudentRepository studentRepository) {
+        Faker faker = new Faker();
+        for (int i = 0; i < 20; i++) {
+            String firstName = faker.name().firstName();
+            String lastName = faker.name().lastName();
+            String email = String.format("%s.%s@gmail.com", firstName, lastName);
+            Student student = new Student(
+                    firstName,
+                    lastName,
+                    email,
+                    faker.number().numberBetween(17, 55));
+            studentRepository.save(student);
+        }
+    }
+
 }
+
+
+
+//package com.example.demo;
+//
+//import org.springframework.boot.CommandLineRunner;
+//import org.springframework.boot.SpringApplication;
+//import org.springframework.boot.autoconfigure.SpringBootApplication;
+//import org.springframework.context.annotation.Bean;
+//
+//import java.util.List;
+//
+//@SpringBootApplication
+//public class Application {
+//
+//    public static void main(String[] args) {
+//        SpringApplication.run(Application.class, args);
+//    }
+//
+//    @Bean
+//    CommandLineRunner commandLineRunner(StudentRepository studentRepository) {
+//        return  args -> {
+//            Student alex = new Student(
+//                    "alex",
+//                    "koech",
+//                    "alexkoech@gmail.com",
+//                    14
+//            );
+//            Student maria = new Student(
+//                    "Joy",
+//                    "Mwangi",
+//                    "Joy.Mwangi@gmail.com",
+//                    19
+//            );
+//
+//            Student ahmed = new Student(
+//                    "Julie",
+//                    "Yego",
+//                    "Julie.Yego@gmail.com",
+//                    22
+//            );
+//            studentRepository.saveAll(List.of(alex, ahmed, maria));
+//
+//            studentRepository
+//                    .findStudentByEmail("Joy.Mwangi@gmail.com")
+//                    .ifPresentOrElse(
+//                            System.out::println,
+//                            () -> System.out.println("Student with email Joy.Mwangi@gmail.com not found"));
+//
+//            studentRepository.selectStudentWhereFirstNameAndAgeGreaterOrEqual(
+//                    "Maria",
+//                    21
+//            ).forEach(System.out::println);
+//
+//            studentRepository.selectStudentWhereFirstNameAndAgeGreaterOrEqualNative(
+//                    "Julie",
+//                    19
+//            ).forEach(System.out::println);
+//
+//            System.out.println("Deleting Julie Yego");
+//            System.out.println(studentRepository.deleteStudentById(3L));
+//        };
+//    }
+//}

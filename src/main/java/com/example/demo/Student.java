@@ -4,18 +4,18 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.SEQUENCE;
 
+@Entity(name = "Student")
 @Table(
         name = "student",
-        uniqueConstraints =  {
+        uniqueConstraints = {
                 @UniqueConstraint(name = "student_email_unique", columnNames = "email")
         }
 )
-@Entity(name = "Student")
 public class Student {
 
     @Id
     @SequenceGenerator(
-            name="student_sequence",
+            name = "student_sequence",
             sequenceName = "student_sequence",
             allocationSize = 1
     )
@@ -24,35 +24,43 @@ public class Student {
             generator = "student_sequence"
     )
     @Column(
-            name = "id",
-            updatable = false
+            name = "id"
     )
-    private  Long id;
+    private Long id;
 
     @Column(
-            name = "first_Name",
+            name = "first_name",
             nullable = false,
             columnDefinition = "TEXT"
     )
-    private  String firstName;
+    private String firstName;
+
     @Column(
-            name = "last_Name",
+            name = "last_name",
             nullable = false,
             columnDefinition = "TEXT"
     )
-    private  String lastName;
+    private String lastName;
+
     @Column(
             name = "email",
             nullable = false,
             columnDefinition = "TEXT"
     )
-    private  String email;
+    private String email;
 
     @Column(
             name = "age",
             nullable = false
+
     )
-    private  Integer age;
+    private Integer age;
+
+    @OneToOne(
+            mappedBy = "student",
+            orphanRemoval = true
+    )
+    private StudentIdCard studentIdCard;
 
     public Student(String firstName,
                    String lastName,
