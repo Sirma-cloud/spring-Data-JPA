@@ -14,6 +14,9 @@ import java.util.Optional;
 //This annotation marks the interface as a Spring Data repository.
 //It tells Spring to create a bean for this repository during component scanning, making it available for dependency injection.
 @Repository
+//The @Transactional(readOnly = true) annotation at the class level specifies that all methods declared in this interface will be executed in a read-only transaction.
+//This means that the methods annotated with @Transactional will not perform any write or update operations on the database.
+@Transactional(readOnly = true)
 //This interface provides basic CRUD (Create, Read, Update, Delete) operations and pagination support.
 //It operates on the Student entity type and uses Long as the type of the primary key.
 public interface StudentRepository extends PagingAndSortingRepository<Student, Long> {

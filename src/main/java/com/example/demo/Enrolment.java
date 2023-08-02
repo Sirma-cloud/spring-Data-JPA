@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 @Entity(name = "Enrolment")
 @Table(name = "enrolment")
 public class Enrolment {
+//    EmbeddedId: The Enrolment entity uses an embedded composite key represented by the EnrolmentId class.
+//    The @EmbeddedId annotation is used to indicate that the id field is part of the composite key.
 
     @EmbeddedId
     private EnrolmentId id;
@@ -36,7 +38,6 @@ public class Enrolment {
             columnDefinition = "TIMESTAMP WITHOUT TIME ZONE"
     )
     private LocalDateTime createdAt;
-
 
     public Enrolment(EnrolmentId id,
                      Student student,
